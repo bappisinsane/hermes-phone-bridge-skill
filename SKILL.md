@@ -141,7 +141,23 @@ Termux's bash. Copy it into the project rather than re-deriving the quoting each
   (`/data/data/com.termux/files/usr/bin/…`) or export `PATH` explicitly.
 - **`run-as` only works on debuggable builds.** Verify with `adb shell "run-as com.termux id"`.
 - **Don't `adb push` into `/data/data/<pkg>/`.** The `shell` user cannot write app-private
-  storage. Push to `/sdcard/Download` or `/data/local/tmp`.
+  storage. Push to `/sdcard/Download` or `/data/local/tmp` — or, when Termux private storage
+  is the destination and `termux-setup-storage` is unavailable, **stream it through the
+  `run-as` bridge**:
+
+  ```bash
+  "$ADB" shell "run-as com.termux files/usr/bin/base64 -d > files/home/x.tar.gz" \
+    < <(base64 -w0 < x.tar.gz)
+  ```
+
+  Verify size and hash on both sides before extracting; a truncated stream extracts cleanly
+  and fails later in confusing ways. Base64-carrying also keeps binary content intact, which
+  a plain `cat >` redirection does not guarantee across `adb shell`.
+- **Loopback-only enforcement is a real test, not a formality.** A device will happily bind
+  `0.0.0.0`, so `HOSTNAME=127.0.0.1` in the environment does not prove the listener is
+  loopback. Always read the actual listener line (`ss -ltnp`) and fail the run if it shows
+  `0.0.0.0`/`*`. Confirm the port is free first, and confirm the socket is released after the
+  test — otherwise the next run inherits a stale listener and reports a false failure.
 - **USB tethering is not shell access.** A phone showing `Remote NDIS based Internet Sharing
   Device` is reachable at the IP layer only — no shell, no ADB.
 - **A device exposing only MTP + RNDIS has no ADB interface.** Check the USB interface list
@@ -158,6 +174,7 @@ Termux's bash. Copy it into the project rather than re-deriving the quoting each
 | Termux app-uid check | `adb shell "run-as com.termux id"` |
 | Run a script inside Termux | `bash scripts/termux-run.sh script.sh` |
 | Push a file | `adb push local /sdcard/Download/` |
+| Stream a file into Termux private storage | `adb shell "run-as com.termux files/usr/bin/base64 -d > files/home/x" < <(base64 -w0 < x)` |
 | Install an APK | `adb install -r -d app.apk` |
 
 ## Files

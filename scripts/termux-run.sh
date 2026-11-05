@@ -35,4 +35,4 @@ fi
 
 B64="$(base64 -w0 < "$SCRIPT")"
 
-"$ADB" shell "run-as com.termux files/usr/bin/bash -c 'export PREFIX=$PREFIX_DIR; export HOME=$HOME_DIR; export PATH=\$PREFIX/bin:\$PATH; export LD_LIBRARY_PATH=\$PREFIX/lib; export LANG=C.UTF-8; export TMPDIR=\$HOME/tmp; mkdir -p \$TMPDIR; echo $B64 | base64 -d | bash'"
+"$ADB" shell "run-as com.termux files/usr/bin/bash -c 'export PREFIX=$PREFIX_DIR; export HOME=$HOME_DIR; export PATH=\$PREFIX/bin:\$PATH; export LD_LIBRARY_PATH=\$PREFIX/lib; export LANG=C.UTF-8; export TMPDIR=\$HOME/tmp; mkdir -p \$TMPDIR; echo $B64 | base64 -d | bash -s --'"
