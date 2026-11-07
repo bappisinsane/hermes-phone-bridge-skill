@@ -214,6 +214,8 @@ over USB, a missing `adb`, an `unauthorized` device, or reaching Termux from the
 - **Termux:** the [GitHub debug build](https://github.com/termux/termux-app/releases) for
   the `run-as` bridge (Option B); the F-Droid build works with Termux `sshd` (Option A)
 - **No root required**
+- **Sync note:** this repo is the source of truth; the copy Hermes loads lives at
+  `AppData\Local\hermes\skills\android\`. Keep them in sync after edits.
 
 ---
 
