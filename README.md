@@ -172,6 +172,8 @@ Hard-won. Each one cost real time.
   storage. Push to `/sdcard/Download` or `/data/local/tmp`.
 - **USB tethering is not shell access.** A phone showing `Remote NDIS based Internet Sharing
   Device` is reachable at the IP layer only — no shell, no ADB.
+- **ADB authorization is per-PC.** A new machine (or a wiped ADB key) triggers a fresh
+  RSA prompt on the phone; the old `~/.android/adbkey` won't carry over.
 - **A device exposing only MTP + RNDIS has no ADB interface.** Check the USB interface list
   before blaming the cable or driver.
 
