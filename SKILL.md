@@ -162,6 +162,14 @@ Termux's bash. Copy it into the project rather than re-deriving the quoting each
   Device` is reachable at the IP layer only — no shell, no ADB.
 - **A device exposing only MTP + RNDIS has no ADB interface.** Check the USB interface list
   (`Get-PnpDevice`) before blaming the cable or driver.
+- **A charge-only USB cable powers the phone but carries no data.** `adb devices` stays
+  empty — no `unauthorized`, no `offline`. Swap the cable before blaming the driver; many
+  cheap USB-C cables are charge-only.
+- **Windows may be missing the ADB driver.** If `adb devices` is empty on Windows, check
+  Device Manager for an unknown device or a yellow triangle, then install Google's USB
+  driver or let Windows Update fetch `Android Composite ADB Interface`.
+- **`adb shell` output carries CRLF.** The device shell runs on a pseudo-terminal, so
+  `echo hi` returns `hi\r`. Strip it (`tr -d '\r'`) before comparing output in scripts.
 
 ## Quick reference
 
